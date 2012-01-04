@@ -172,6 +172,10 @@ module Gruff
     # Will be scaled down if graph is smaller than 800px wide.
     attr_accessor :legend_box_size
 
+    # Suppress legend wrapping
+    attr_accessor :suppress_legend_wrapping
+    attr_accessor :legend_left_margin
+
     # If one numerical argument is given, the graph is drawn at 4/3 ratio
     # according to the given width (800 results in 800x600, 400 gives 400x300,
     # etc.).
@@ -245,6 +249,9 @@ module Gruff
       @y_axis_increment = nil
       @stacked = nil
       @norm_data = nil
+
+      @suppress_legend_wrapping = false
+      @legend_left_margin = 50.0
     end
 
     # Sets the top, bottom, left and right margins to +margin+.
@@ -786,6 +793,7 @@ module Gruff
       end
 
       current_x_offset = center(sum(label_widths.first))
+      current_x_offset = @legend_left_margin if @suppress_legend_wrapping
       current_y_offset =  @hide_title ?
       @top_margin + title_margin :
         @top_margin + title_margin + @title_caps_height
@@ -816,6 +824,12 @@ module Gruff
         metrics = @d.get_type_metrics(@base_image, legend_label.to_s)
         current_string_offset = metrics.width + (legend_square_width * 2.7)
 
+        if @suppress_legend_wrapping
+          line_height = [@legend_caps_height, legend_square_width].max + legend_margin
+          current_y_offset += line_height
+          @graph_top += line_height
+          @graph_height = @graph_bottom - @graph_top
+        else
         # Handle wrapping
         label_widths.first.shift
         if label_widths.first.empty?
@@ -832,6 +846,7 @@ module Gruff
           end
         else
           current_x_offset += current_string_offset
+        end
         end
       end
       @color_index = 0

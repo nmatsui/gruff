@@ -23,6 +23,12 @@ Gruff is easy to use with Rails.
 
 This is beta-quality software. It works well according to my tests, but the API may change and other features will be added.
 
+== Customized
+
+* Fix exception when y_axis_increment is used in Gruff::Line.
+* Add attribute suppress_legend_wrapping & legend_left_margine.
+  If use them, legends overwrap is suppressed.
+
 == Source
 
 The source for this project is now kept at GitHub:
