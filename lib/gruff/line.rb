@@ -115,6 +115,12 @@ class Gruff::Line < Gruff::Base
     @norm_baseline = (@baseline_value.to_f / @maximum_value.to_f) if @baseline_value
   end
 
+  def normalize(force=false)
+    @maximum_value = [@maximum_value.to_f, @baseline_value.to_f].max
+    super(force)
+    @norm_baseline = (@baseline_value.to_f / @maximum_value.to_f) if @baseline_value
+  end
+
   def contains_one_point_only?(data_row)
     # Spin through data to determine if there is just one_value present.
     one_point = false
